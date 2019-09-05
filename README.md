@@ -50,8 +50,7 @@ Of-course!
 from confidential import SecretManager
 
 
-SECRETS_FILE = os.environ.get("SECRETS_FILE", ".secrets/defaults.json")
-secrets = SecretManager(SECRETS_FILE)
+secrets = SecretManager("production.json", "defaults.json")
 
 DATABASES = {
     'default': secrets["database"]
