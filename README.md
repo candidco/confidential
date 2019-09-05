@@ -46,7 +46,7 @@ which outputs the file with decrypted values
 Of-course!
 
 `settings.py`
-```
+```python
 from confidential import SecretManager
 
 
