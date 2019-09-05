@@ -1,5 +1,13 @@
 # 🤫 Confidential
 
+## Installation
+
+```
+pip install confidential
+```
+
+## How does it work?
+
 Confidential manages secrets for your project, using AWS Secrets Manager.
 
 First, create a secrets file, `my_secrets.json`
@@ -33,7 +41,9 @@ which outputs the file with decrypted values
 }
 ```
 
-## Usage in Python projects
+## Can I use it in my Python projects?
+
+Of-course!
 
 `settings.py`
 ```
