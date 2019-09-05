@@ -1,4 +1,6 @@
-# 🤫 Confidential
+![confidential](https://user-images.githubusercontent.com/1169974/64377143-c7f36680-cff7-11e9-9616-e6c4b8b897b2.png)
+
+# Confidential
 
 ## Installation
 
@@ -46,12 +48,11 @@ which outputs the file with decrypted values
 Of-course!
 
 `settings.py`
-```
+```python
 from confidential import SecretManager
 
 
-SECRETS_FILE = os.environ.get("SECRETS_FILE", ".secrets/defaults.json")
-secrets = SecretManager(SECRETS_FILE)
+secrets = SecretManager("production.json", "defaults.json")
 
 DATABASES = {
     'default': secrets["database"]
