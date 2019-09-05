@@ -26,8 +26,7 @@ def store_secret():
 
     def wrapped(key, value):
         sm = boto3.client('secretsmanager', region_name="us-west-1")
-        response = sm.create_secret(Name=key, SecretString=value)
-        print("stored secret", response)
+        sm.create_secret(Name=key, SecretString=value)
 
     return wrapped
 
