@@ -10,7 +10,7 @@ from botocore.exceptions import ClientError
 log = logging.getLogger(__name__)
 
 
-class SecretManager:
+class SecretsManager:
     def __init__(self, secret_file=None, secrets_file_default=None, region_name=None):
         session = boto3.session.Session()
 
@@ -97,7 +97,7 @@ class SecretManager:
 @click.option("--output-json", help="Return secrets as JSON", is_flag=True)
 def decrypt_secret(secrets_file, default_secrets_file, aws_region, output_json):
     pp = pprint.PrettyPrinter(indent=4)
-    secrets_manager = SecretManager(secrets_file, default_secrets_file, aws_region)
+    secrets_manager = SecretsManager(secrets_file, default_secrets_file, aws_region)
     if output_json is True:
         print(json.dumps(secrets_manager.secrets))
     else:

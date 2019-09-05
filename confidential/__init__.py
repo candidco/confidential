@@ -1,4 +1,4 @@
-from confidential.secrets_manager import SecretManager
+from confidential.secrets_manager import SecretsManager
 
-__all__ = ["SecretManager"]
-__version__ = "0.1.0"
+__all__ = ["SecretsManager"]
+__version__ = "1.0.0"
