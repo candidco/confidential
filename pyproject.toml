@@ -11,6 +11,8 @@ click = "^7.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
+pytest-mock = "^1.10"
+moto = "^1.3"
 
 [tool.poetry.plugins."console_scripts"]
 "confidential" = "confidential.secrets_manager:decrypt_secret"
