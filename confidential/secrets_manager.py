@@ -76,7 +76,7 @@ class SecretManager:
 
         for key, value in config.items():
             if isinstance(value, str) and value.startswith("secret:"):
-                decrypted_string = self.decrypt_secret_from_aws(value[8:])
+                decrypted_string = self.decrypt_secret_from_aws(value[7:])
 
                 # Check if the payload is serialized JSON
                 try:
