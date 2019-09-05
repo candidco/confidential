@@ -1,0 +1,6 @@
+{
+  "database": "unencrypted",
+  "redis_host": "something",
+  "redis_port": 6379,
+  "debug": false
+}
