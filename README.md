@@ -1,4 +1,6 @@
-# 🤫 Confidential
+![confidential](https://user-images.githubusercontent.com/1169974/64377143-c7f36680-cff7-11e9-9616-e6c4b8b897b2.png)
+
+# Confidential
 
 ## Installation
 
