@@ -41,6 +41,9 @@ which outputs the file with decrypted values
 }
 ```
 
+![image](https://user-images.githubusercontent.com/1169974/64388843-64286800-d00e-11e9-8fa2-7935b3d4f1ca.png)
+
+
 ## Can I use it in my Python projects?
 
 Yes, simply import and instantiate `SecretsManager`, like so:
