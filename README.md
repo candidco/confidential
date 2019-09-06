@@ -72,5 +72,5 @@ poetry install
 
 Then run the tests
 ```bash
-pytest
+poetry run pytest
 ```
