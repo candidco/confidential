@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "confidential"
-version = "1.1.1"
+version = "1.1.2"
 description = "Manage secrets in your projects using AWS Secrets Manager"
-authors = ["Daniel van Flymen <dvf@candidco.com>"]
+authors = ["Daniel van Flymen <dvf@candidco.com>", "Elliott Chartock <elliott.chartock@candidco.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.6"
