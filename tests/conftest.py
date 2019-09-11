@@ -25,7 +25,7 @@ def store_secret():
     """
 
     def wrapped(key, value):
-        sm = boto3.client('secretsmanager', region_name="us-west-1")
+        sm = boto3.client("secretsmanager", region_name="us-west-1")
         sm.create_secret(Name=key, SecretString=value)
 
     return wrapped
@@ -36,10 +36,7 @@ def secrets(store_secret):
     store_secret("keep_it_secret", "keep_it_safe")
 
     def wrapped(**overrides):
-        d = {
-            "foo": "bar",
-            "keep_it_secret": "secret:keep_it_secret"
-        }
+        d = {"foo": "bar", "keep_it_secret": "secret:keep_it_secret"}
         d.update(overrides)
         return d
 
