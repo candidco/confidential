@@ -15,7 +15,7 @@ class SecretsManager:
         session = boto3.session.Session()
 
         self.session = session
-        self.client = session.client(service_name='secretsmanager', region_name=region_name)
+        self.client = session.client(service_name="secretsmanager", region_name=region_name)
 
         secrets_defaults = self.parse_secrets_file(secrets_file_default) if secrets_file_default else {}
         secrets = self.parse_secrets_file(secret_file) if secret_file else {}
@@ -39,23 +39,23 @@ class SecretsManager:
             get_secret_value_response = self.client.get_secret_value(SecretId=secret_name)
 
         except ClientError as e:
-            if e.response['Error']['Code'] == 'DecryptionFailureException':
+            if e.response["Error"]["Code"] == "DecryptionFailureException":
                 raise Exception("can't decrypt the protected secret text using the provided KMS key.") from e
 
-            elif e.response['Error']['Code'] == 'InternalServiceErrorException':
+            elif e.response["Error"]["Code"] == "InternalServiceErrorException":
                 raise Exception("An error occurred on the server side.") from e
 
-            elif e.response['Error']['Code'] == 'InvalidParameterException':
+            elif e.response["Error"]["Code"] == "InvalidParameterException":
                 raise Exception("You provided an invalid value for a parameter.") from e
 
-            elif e.response['Error']['Code'] == 'InvalidRequestException':
+            elif e.response["Error"]["Code"] == "InvalidRequestException":
                 raise Exception("Invalid parameter value for the current state of the resource.") from e
 
-            elif e.response['Error']['Code'] == 'ResourceNotFoundException':
+            elif e.response["Error"]["Code"] == "ResourceNotFoundException":
                 raise Exception("We can't find the resource that you asked for.") from e
 
         else:
-            return get_secret_value_response['SecretString'] if 'SecretString' in get_secret_value_response else None
+            return get_secret_value_response["SecretString"] if "SecretString" in get_secret_value_response else None
 
     @staticmethod
     def import_secrets_file(path_to_file) -> dict:
