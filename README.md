@@ -12,7 +12,8 @@ pip install confidential
 
 Confidential manages secrets for your project, using AWS Secrets Manager.
 
-First, create a secrets file, `my_secrets.json`
+First, store a secret in AWS Secrets Manager. Then, create a secrets file, say `my_secrets.json`. A value will be decrypted if the word `secret` precedes it, like the `database` value below:
+
 ```json
 {
   "database": "secret:database_details",
@@ -20,8 +21,6 @@ First, create a secrets file, `my_secrets.json`
   "debug_mode": false
 }
 ```  
-
-Mark a value as needing decryption by prepending `secret` to it, like `database` above.
  
 You can decrypt this file using the CLI:
 
