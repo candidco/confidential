@@ -7,20 +7,22 @@ import boto3
 import click
 from botocore.exceptions import ClientError
 
+from confidential.utils import merge
+
 log = logging.getLogger(__name__)
 
 
 class SecretsManager:
-    def __init__(self, secret_file=None, secrets_file_default=None, region_name=None):
+    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None):
         session = boto3.session.Session()
 
         self.session = session
         self.client = session.client(service_name="secretsmanager", region_name=region_name)
 
         secrets_defaults = self.parse_secrets_file(secrets_file_default) if secrets_file_default else {}
-        secrets = self.parse_secrets_file(secret_file) if secret_file else {}
+        secrets = self.parse_secrets_file(secrets_file) if secrets_file else {}
 
-        self.secrets = {**secrets_defaults, **secrets}
+        self.secrets = merge(secrets_defaults, secrets)
 
     def __getitem__(self, key):
         """
