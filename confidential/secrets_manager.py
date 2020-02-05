@@ -1,10 +1,9 @@
+import boto3
+import click
 import json
 import logging
 import os
 import pprint
-
-import boto3
-import click
 from botocore.exceptions import ClientError
 
 from confidential.utils import merge
@@ -70,41 +69,42 @@ class SecretsManager:
         with open(path_to_file) as file_object:
             return json.load(file_object)
 
-    def parse_secrets_file(self, path_to_file) -> dict:
+    def traverse_and_decrypt(self, config):
         """
-        Imports and parses a JSON file and returns a decrypted JSON dictionary
+        Recursively walks the dictionary of values, and decrypts values if necessary
         """
-        config = self.import_secrets_file(path_to_file)
-
-        def traverse(config):
-            for key, value in config.items():
-                if isinstance(value, dict):
-                    traverse(value)
-                else:
-                    config[key] = self.decrypt_string(value)
-
-        for key,value in config.items():
+        for key, value in config.items():
             if isinstance(value, dict):
-                traverse(value)
+                self.traverse_and_decrypt(value)
             else:
                 config[key] = self.decrypt_string(value)
-
-        return config
 
     def decrypt_string(self, value) -> str:
         """
         Attempts to decrypt an encrypted string.
         """
 
-        if not value.startswith("secret:"):
+        if not (isinstance(value, str) and value.startswith("secret:")):
             return value
+
         decrypted_string = self.decrypt_secret_from_aws(value[7:])
+
         # Check if the payload is serialized JSON
         try:
             result = json.loads(decrypted_string)
         except json.decoder.JSONDecodeError:
             result = decrypted_string
         return result
+
+    def parse_secrets_file(self, path_to_file) -> dict:
+        """
+        Imports and parses a JSON file and returns a decrypted JSON dictionary
+        """
+        config = self.import_secrets_file(path_to_file)
+
+        self.traverse_and_decrypt(config)
+
+        return config
 
 
 @click.command()
