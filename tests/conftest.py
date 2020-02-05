@@ -41,11 +41,7 @@ def secrets(store_secret):
         d = {
             "foo": "bar",
             "keep_it_secret": "secret:keep_it_secret",
-            "some_nested_key": {
-                "some_int": 123,
-                "some_str": "ABC",
-                "some_enc_str": "secret:some_enc_str"
-            },
+            "some_nested_key": {"some_int": 123, "some_str": "ABC", "some_enc_str": "secret:some_enc_str"},
             "nested_object": "secret:nested_object",
         }
         d.update(overrides)
