@@ -2,7 +2,11 @@
 name = "confidential"
 version = "2.1.1"
 description = "Manage secrets in your projects using AWS Secrets Manager"
-authors = ["Daniel van Flymen <dvf@candidco.com>", "Elliott Chartock <elliott.chartock@candidco.com>"]
+authors = [
+    "Daniel van Flymen <dvf@candidco.com>",
+    "Elliott Chartock <elliott.chartock@candidco.com>",
+    "Vageli Mouzakitis <vageli.mouzakitis@candidco.com>",
+]
 
 [tool.poetry.dependencies]
 python = "^3.6"
