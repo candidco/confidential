@@ -80,6 +80,10 @@ class SecretsManager:
             if isinstance(value, str):
                 print(value)
                 config[key] = self.decrypt_string(value)
+            elif isinstance(value, dict):
+                for k, v in value.items():
+                    if isinstance(v, str):
+                        config[key][k] = self.decrypt_string(v)
         return config
 
 
