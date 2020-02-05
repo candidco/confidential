@@ -77,20 +77,26 @@ class SecretsManager:
         config = self.import_secrets_file(path_to_file)
 
         for key, value in config.items():
-            if isinstance(value, str) and value.startswith("secret:"):
-                decrypted_string = self.decrypt_secret_from_aws(value[7:])
-
-                # Check if the payload is serialized JSON
-                try:
-                    config[key] = json.loads(decrypted_string)
-                except json.decoder.JSONDecodeError:
-                    config[key] = decrypted_string
-
-            else:
-                config[key] = value
-
+            if isinstance(value, str):
+                print(value)
+                config[key] = self.decrypt_string(value)
         return config
 
+
+    def decrypt_string(self,value) -> str:
+        """
+        Attempts to decrypt an encrypted string.
+        """
+
+        if not value.startswith("secret:"):
+            return value
+        decrypted_string = self.decrypt_secret_from_aws(value[7:])
+        # Check if the payload is serialized JSON
+        try:
+            result = json.loads(decrypted_string)
+        except json.decoder.JSONDecodeError:
+            result = decrypted_string
+        return result
 
 @click.command()
 @click.argument("secrets_file", type=click.Path(exists=True))
