@@ -84,6 +84,11 @@ class SecretsManager:
                 for k, v in value.items():
                     if isinstance(v, str):
                         config[key][k] = self.decrypt_string(v)
+                    elif isinstance(v,dict):
+                        for kk, vv in v.items():
+                            if isinstance(vv, str):
+                                config[key][k][kk] = self.decrypt_string(vv)
+
         return config
 
 
