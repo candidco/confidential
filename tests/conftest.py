@@ -34,9 +34,20 @@ def store_secret():
 @pytest.fixture
 def secrets(store_secret):
     store_secret("keep_it_secret", "keep_it_safe")
+    store_secret("nested_object", '{"foo": "bar"}')
+    store_secret("some_enc_str", "some_enc_value")
 
     def wrapped(**overrides):
-        d = {"foo": "bar", "keep_it_secret": "secret:keep_it_secret"}
+        d = {
+            "foo": "bar",
+            "keep_it_secret": "secret:keep_it_secret",
+            "some_nested_key": {
+                "some_int": 123,
+                "some_str": "ABC",
+                "some_enc_str": "secret:some_enc_str"
+            },
+            "nested_object": "secret:nested_object",
+        }
         d.update(overrides)
         return d
 
