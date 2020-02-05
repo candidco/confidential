@@ -20,7 +20,6 @@ jobs:
     - name: Install dependencies
       run: |
         pip install poetry
-        poetry config settings.virtualenvs.create false
         poetry install
     - name: Test with pytest
       run: |
