@@ -84,15 +84,14 @@ class SecretsManager:
                 for k, v in value.items():
                     if isinstance(v, str):
                         config[key][k] = self.decrypt_string(v)
-                    elif isinstance(v,dict):
+                    elif isinstance(v, dict):
                         for kk, vv in v.items():
                             if isinstance(vv, str):
                                 config[key][k][kk] = self.decrypt_string(vv)
 
         return config
 
-
-    def decrypt_string(self,value) -> str:
+    def decrypt_string(self, value) -> str:
         """
         Attempts to decrypt an encrypted string.
         """
@@ -106,6 +105,7 @@ class SecretsManager:
         except json.decoder.JSONDecodeError:
             result = decrypted_string
         return result
+
 
 @click.command()
 @click.argument("secrets_file", type=click.Path(exists=True))
