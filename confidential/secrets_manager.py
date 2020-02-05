@@ -76,18 +76,18 @@ class SecretsManager:
         """
         config = self.import_secrets_file(path_to_file)
 
-        for key, value in config.items():
-            if isinstance(value, str):
-                print(value)
+        def traverse(config):
+            for key, value in config.items():
+                if isinstance(value, dict):
+                    traverse(value)
+                else:
+                    config[key] = self.decrypt_string(value)
+
+        for key,value in config.items():
+            if isinstance(value, dict):
+                traverse(value)
+            else:
                 config[key] = self.decrypt_string(value)
-            elif isinstance(value, dict):
-                for k, v in value.items():
-                    if isinstance(v, str):
-                        config[key][k] = self.decrypt_string(v)
-                    elif isinstance(v, dict):
-                        for kk, vv in v.items():
-                            if isinstance(vv, str):
-                                config[key][k][kk] = self.decrypt_string(vv)
 
         return config
 
