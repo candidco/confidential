@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "confidential"
-version = "2.1.1"
+version = "2.2.0"
 description = "Manage secrets in your projects using AWS Secrets Manager"
 authors = [
     "Daniel van Flymen <dvf@candidco.com>",
