@@ -12,8 +12,8 @@ log = logging.getLogger(__name__)
 
 
 class SecretsManager:
-    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None):
-        session = boto3.session.Session()
+    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, profile_name=None):
+        session = boto3.session.Session(profile_name=profile_name)
 
         self.session = session
         self.client = session.client(service_name="secretsmanager", region_name=region_name)
@@ -110,11 +110,12 @@ class SecretsManager:
 @click.command()
 @click.argument("secrets_file", type=click.Path(exists=True))
 @click.option("--default_secrets_file", default=None, help="A default secrets file that will be overridden")
+@click.option("-p", "--profile", default=None, help="AWS Profile")
 @click.option("--aws_region", help="AWS Region", default="us-east-1")
 @click.option("--output-json", help="Return secrets as JSON", is_flag=True)
-def decrypt_secret(secrets_file, default_secrets_file, aws_region, output_json):
+def decrypt_secret(secrets_file, default_secrets_file, profile, aws_region, output_json):
     pp = pprint.PrettyPrinter(indent=4)
-    secrets_manager = SecretsManager(secrets_file, default_secrets_file, aws_region)
+    secrets_manager = SecretsManager(secrets_file=secrets_file, secrets_file_default=default_secrets_file, region_name=aws_region, profile_name=profile)
     if output_json is True:
         print(json.dumps(secrets_manager.secrets))
     else:
