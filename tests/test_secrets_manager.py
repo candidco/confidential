@@ -1,4 +1,3 @@
-import mock
 import pytest
 
 from confidential import SecretsManager
@@ -22,11 +21,11 @@ def test_happy_path(secrets_file):
     assert secrets["nested_object"] == {"foo": "bar"}
 
 
-@mock.patch("confidential.secrets_manager.boto3")
-def test_missing_secret_string_raises_permission_error(mock_boto, secrets_file):
-    client_mock = mock.Mock()
+def test_missing_secret_string_raises_permission_error(mocker, secrets_file):
+    mock_boto = mocker.patch("confidential.secrets_manager.boto3.session.Session")
+    client_mock = mocker.Mock()
     client_mock.client.return_value.get_secret_value.return_value = {"FakeKey": "FakeValue"}
-    mock_boto.session.Session.return_value = client_mock
+    mock_boto.return_value = client_mock
 
     with pytest.raises(PermissionError) as exc_info:
         with secrets_file() as f:
