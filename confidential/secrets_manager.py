@@ -58,7 +58,9 @@ class SecretsManager:
 
         else:
             if "SecretString" not in get_secret_value_response:
-                raise PermissionError("`SecretString` not found in AWS response, does the IAM user have correct permissions?")
+                raise PermissionError(
+                    "`SecretString` not found in AWS response, does the IAM user have correct permissions?"
+                )
 
             return get_secret_value_response["SecretString"]
 
@@ -119,7 +121,12 @@ class SecretsManager:
 @click.option("--output-json", help="Return secrets as JSON", is_flag=True)
 def decrypt_secret(secrets_file, default_secrets_file, profile, aws_region, output_json):
     pp = pprint.PrettyPrinter(indent=4)
-    secrets_manager = SecretsManager(secrets_file=secrets_file, secrets_file_default=default_secrets_file, region_name=aws_region, profile_name=profile)
+    secrets_manager = SecretsManager(
+        secrets_file=secrets_file,
+        secrets_file_default=default_secrets_file,
+        region_name=aws_region,
+        profile_name=profile,
+    )
     if output_json is True:
         print(json.dumps(secrets_manager.secrets))
     else:
