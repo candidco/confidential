@@ -90,9 +90,10 @@ class SecretsManager:
         decrypted_string = self.decrypt_secret_from_aws(value[7:])
 
         # Check if the payload is serialized JSON
+        # TypeError handles None case
         try:
             result = json.loads(decrypted_string)
-        except json.decoder.JSONDecodeError:
+        except (json.decoder.JSONDecodeError, TypeError):
             result = decrypted_string
         return result
 
