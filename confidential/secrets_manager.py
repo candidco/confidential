@@ -6,6 +6,7 @@ import os
 import pprint
 from botocore.exceptions import ClientError
 
+from confidential.exceptions import PermissionError
 from confidential.utils import merge
 
 log = logging.getLogger(__name__)
@@ -56,7 +57,12 @@ class SecretsManager:
                 raise Exception("We can't find the resource that you asked for.") from e
 
         else:
-            return get_secret_value_response["SecretString"] if "SecretString" in get_secret_value_response else None
+            if "SecretString" not in get_secret_value_response:
+                raise PermissionError(
+                    "`SecretString` not found in AWS response, does the IAM user have correct permissions?"
+                )
+
+            return get_secret_value_response["SecretString"]
 
     @staticmethod
     def import_secrets_file(path_to_file) -> dict:
@@ -115,7 +121,12 @@ class SecretsManager:
 @click.option("--output-json", help="Return secrets as JSON", is_flag=True)
 def decrypt_secret(secrets_file, default_secrets_file, profile, aws_region, output_json):
     pp = pprint.PrettyPrinter(indent=4)
-    secrets_manager = SecretsManager(secrets_file=secrets_file, secrets_file_default=default_secrets_file, region_name=aws_region, profile_name=profile)
+    secrets_manager = SecretsManager(
+        secrets_file=secrets_file,
+        secrets_file_default=default_secrets_file,
+        region_name=aws_region,
+        profile_name=profile,
+    )
     if output_json is True:
         print(json.dumps(secrets_manager.secrets))
     else:
