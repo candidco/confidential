@@ -7,7 +7,7 @@ import pytest
 from moto import mock_secretsmanager
 
 
-@pytest.yield_fixture(autouse=True, scope="session")
+@pytest.yield_fixture(autouse=True)
 def mock_secrets_manager():
     """
     Starts moto at the beginning of tests, and closes it at the end of the session

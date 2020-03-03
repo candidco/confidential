@@ -6,6 +6,7 @@ import os
 import pprint
 from botocore.exceptions import ClientError
 
+from confidential.exceptions import PermissionError
 from confidential.utils import merge
 
 log = logging.getLogger(__name__)
@@ -57,7 +58,7 @@ class SecretsManager:
 
         else:
             if "SecretString" not in get_secret_value_response:
-                raise Exception("`SecretString` not found in AWS response, does the IAM user have correct permissions?")
+                raise PermissionError("`SecretString` not found in AWS response, does the IAM user have correct permissions?")
 
             return get_secret_value_response["SecretString"]
 

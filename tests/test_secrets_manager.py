@@ -1,4 +1,12 @@
+import mock
+import pytest
+
+import boto3
+from botocore.stub import Stubber
+
 from confidential import SecretsManager
+from confidential.exceptions import PermissionError
+
 
 
 def test_happy_path(secrets_file):
@@ -16,3 +24,18 @@ def test_happy_path(secrets_file):
 
     # Check nested object decoding
     assert secrets["nested_object"] == {"foo": "bar"}
+
+
+@mock.patch("confidential.secrets_manager.boto3")
+def test_missing_secret_string_raises_permission_error(mock_boto, secrets_file):
+    client_mock = mock.Mock()
+    client_mock.client.return_value.get_secret_value.return_value = {
+        "FakeKey": "FakeValue"
+    }
+    mock_boto.session.Session.return_value = client_mock
+
+    with pytest.raises(PermissionError) as exc_info:
+        with secrets_file() as f:
+            SecretsManager(f, region_name="us-west-1")
+
+    assert str(exc_info.value) == "`SecretString` not found in AWS response, does the IAM user have correct permissions?"
