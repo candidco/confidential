@@ -57,7 +57,7 @@ class SecretsManager:
 
         else:
             if "SecretString" not in get_secret_value_response:
-                raise IOError("SecretString not found, user doesn't have permission to decrypt that secret.")
+                raise Exception("`SecretString` not found in AWS response, does the IAM user have correct permissions?")
 
             return get_secret_value_response["SecretString"]
 
