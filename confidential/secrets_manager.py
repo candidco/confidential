@@ -56,7 +56,10 @@ class SecretsManager:
                 raise Exception("We can't find the resource that you asked for.") from e
 
         else:
-            return get_secret_value_response["SecretString"] if "SecretString" in get_secret_value_response else None
+            if "SecretString" not in get_secret_value_response:
+                raise IOError("SecretString not found, user doesn't have permission to decrypt that secret.")
+
+            return get_secret_value_response["SecretString"]
 
     @staticmethod
     def import_secrets_file(path_to_file) -> dict:
@@ -90,10 +93,9 @@ class SecretsManager:
         decrypted_string = self.decrypt_secret_from_aws(value[7:])
 
         # Check if the payload is serialized JSON
-        # TypeError handles None case
         try:
             result = json.loads(decrypted_string)
-        except (json.decoder.JSONDecodeError, TypeError):
+        except json.decoder.JSONDecodeError:
             result = decrypted_string
         return result
 
