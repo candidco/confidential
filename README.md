@@ -22,7 +22,7 @@ First, store a secret in AWS Secrets Manager. Then, create a secrets file, say `
 }
 ```  
  
-You can decrypt this file using the CLI:
+You can decrypt this file either in Python, or directly using the CLI:
 
 ```bash
 confidential my_secrets.json
@@ -54,7 +54,11 @@ Yes, simply import and instantiate `SecretsManager`, like so:
 from confidential import SecretsManager
 
 
-secrets = SecretManager("production.json", "defaults.json", region="us-east-1")
+secrets = SecretManager(
+    secrets_file=".secrets/production.json",
+    secrets_file_default=".secrets/defaults.json",  # Overridable defaults you can use in common environments
+    region_name="us-east-1",
+)
 
 DATABASES = {
     'default': secrets["database"]
