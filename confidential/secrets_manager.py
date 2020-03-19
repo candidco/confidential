@@ -57,7 +57,7 @@ class SecretsManager:
                 raise Exception("We can't find the resource that you asked for.") from e
 
         else:
-            if "SecretString" not in get_secret_value_response:
+            if "SecretString" not in get_secret_value_response or get_secret_value_response["SecretString"] is None:
                 raise PermissionError(
                     "`SecretString` not found in AWS response, does the IAM user have correct permissions?"
                 )
