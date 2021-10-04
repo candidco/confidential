@@ -22,7 +22,7 @@ First, store a secret in AWS Secrets Manager. Then, create a secrets file, say `
 }
 ```  
  
-You can decrypt this file either in Python, or directly using the CLI:
+You can decrypt this file either in Python, or directly using the CLI. Ensure [AWS CLI](https://aws.amazon.com/cli/) is set up, then run:
 
 ```bash
 confidential my_secrets.json
