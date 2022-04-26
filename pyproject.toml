@@ -1,23 +1,30 @@
 [tool.poetry]
 name = "confidential"
-version = "2.3.1"
+version = "2.3.2"
 description = "Manage secrets in your projects using AWS Secrets Manager"
 authors = [
     "Daniel van Flymen <dvf@candidco.com>",
     "Elliott Chartock <elliott.chartock@candidco.com>",
     "Vageli Mouzakitis <vageli.mouzakitis@candidco.com>",
+    "Diaphel Thompson <diaphel@candidco.com>"
 ]
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.6"
 boto3 = "^1.7"
-click = "^7.0"
+click = "8.0.3"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^18.3-alpha.0", allow-prereleases = true}
 pytest = "^3.0"
 pytest-mock = "^1.10"
-moto = "^1.3"
+moto = "^3.1.6"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
 
 [tool.poetry.plugins."console_scripts"]
 "confidential" = "confidential.secrets_manager:decrypt_secret"
@@ -41,7 +48,3 @@ exclude = '''
   | dist
 )/
 '''
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
