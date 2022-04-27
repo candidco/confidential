@@ -31,4 +31,6 @@ jobs:
         SOURCE_DIR: "."
       run: |
         pip install s3pypi==0.11.0
+        pip install poetry2setup
+        poetry2setup > setup.py
         s3pypi --bucket pypi.candidco.com --private
