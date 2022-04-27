@@ -25,3 +25,10 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Push to s3
+      env:
+        AWS_S3_BUCKET: pypi.candidco.com
+        SOURCE_DIR: "."
+      run: |
+        pip install s3pypi==0.11.0
+        s3pypi --bucket pypi.candidco.com --private
