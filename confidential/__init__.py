@@ -1,4 +1,5 @@
 from confidential.secrets_manager import SecretsManager
+from confidential.parameter_store import ParameterStore
 
-__all__ = ["SecretsManager"]
+__all__ = ["SecretsManager", "ParameterStore"]
 __version__ = "1.0.0"
