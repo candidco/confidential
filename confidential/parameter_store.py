@@ -55,7 +55,12 @@ class ParameterStore:
 
             elif e.response["Error"]["Code"] == "InvalidKeyId":
                 raise Exception("We can't find the resource that you asked for.") from e
+            
+            elif e.response["Error"]["Code"] == "UnrecognizedClientException":
+                raise Exception("The security token included in the request is invalid.") from e
 
+            else:
+                raise e
         else:
             if "SecretString" not in get_secret_value_response or get_secret_value_response["SecretString"] is None:
                 raise PermissionError(
