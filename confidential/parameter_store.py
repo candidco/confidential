@@ -93,7 +93,7 @@ class ParameterStore:
         if not (isinstance(value, str) and value.startswith("ssm:")):
             return value
 
-        decrypted_string = self.decrypt_secret_from_aws(value[7:])
+        decrypted_string = self.decrypt_secret_from_aws(value[4:])
 
         # Check if the payload is serialized JSON
         try:
