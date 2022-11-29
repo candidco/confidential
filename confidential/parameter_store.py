@@ -62,12 +62,11 @@ class ParameterStore:
             else:
                 raise e
         else:
-            if "SecretString" not in get_secret_value_response or get_secret_value_response["SecretString"] is None:
+            if "Parameter" not in get_secret_value_response or get_secret_value_response["Parameter"]["Value"] is None:
                 raise PermissionError(
-                    "`SecretString` not found in AWS response, does the IAM user have correct permissions?"
+                    "`Value` not found in AWS response, does the IAM user have correct permissions?"
                 )
-
-            return get_secret_value_response["SecretString"]
+            return get_secret_value_response["Parameter"]["Value"]
 
     @staticmethod
     def import_secrets_file(path_to_file) -> dict:
