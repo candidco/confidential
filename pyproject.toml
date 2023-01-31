@@ -27,7 +27,7 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.plugins."console_scripts"]
-"confidential" = "confidential.secrets_manager:decrypt_secret"
+"confidential" = "confidential.configs_manager:decrypt_secret"
 
 [tool.black]
 line-length = 120

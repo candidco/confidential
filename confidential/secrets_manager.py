@@ -1,9 +1,6 @@
-import boto3
-import click
 import json
 import logging
 import os
-import pprint
 from botocore.exceptions import ClientError
 
 from confidential.exceptions import PermissionError
@@ -13,14 +10,12 @@ log = logging.getLogger(__name__)
 
 
 class SecretsManager:
-    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, profile_name=None):
-        session = boto3.session.Session(profile_name=profile_name)
-
+    def __init__(self, secrets=None, secrets_defaults=None, region_name=None, session=None):
         self.session = session
         self.client = session.client(service_name="secretsmanager", region_name=region_name)
 
-        secrets_defaults = self.parse_secrets_file(secrets_file_default) if secrets_file_default else {}
-        secrets = self.parse_secrets_file(secrets_file) if secrets_file else {}
+        secrets_defaults = self.parse_secrets(secrets_defaults) if secrets_defaults else {}
+        secrets = self.parse_secrets(secrets) if secrets else {}
 
         self.secrets = merge(secrets_defaults, secrets)
 
@@ -64,17 +59,6 @@ class SecretsManager:
 
             return get_secret_value_response["SecretString"]
 
-    @staticmethod
-    def import_secrets_file(path_to_file) -> dict:
-        """
-        Imports a JSON file and returns a Python dictionary
-        """
-        if not os.path.exists(path_to_file):
-            raise Exception(f"Specified file '{path_to_file}' does not exist")
-
-        with open(path_to_file) as file_object:
-            return json.load(file_object)
-
     def traverse_and_decrypt(self, config):
         """
         Recursively walks the dictionary of values, and decrypts values if necessary
@@ -102,36 +86,11 @@ class SecretsManager:
             result = decrypted_string
         return result
 
-    def parse_secrets_file(self, path_to_file) -> dict:
+    def parse_secrets(self, secrets) -> dict:
         """
-        Imports and parses a JSON file and returns a decrypted JSON dictionary
+        Parses a JSON dictionary and returns a decrypted JSON dictionary
         """
-        config = self.import_secrets_file(path_to_file)
+        secrets_dict = secrets
+        self.traverse_and_decrypt(secrets_dict)
 
-        self.traverse_and_decrypt(config)
-
-        return config
-
-
-@click.command()
-@click.argument("secrets_file", type=click.Path(exists=True))
-@click.option("--default_secrets_file", default=None, help="A default secrets file that will be overridden")
-@click.option("-p", "--profile", default=None, help="AWS Profile")
-@click.option("--aws_region", help="AWS Region", default="us-east-1")
-@click.option("--output-json", help="Return secrets as JSON", is_flag=True)
-def decrypt_secret(secrets_file, default_secrets_file, profile, aws_region, output_json):
-    pp = pprint.PrettyPrinter(indent=4)
-    secrets_manager = SecretsManager(
-        secrets_file=secrets_file,
-        secrets_file_default=default_secrets_file,
-        region_name=aws_region,
-        profile_name=profile,
-    )
-    if output_json is True:
-        print(json.dumps(secrets_manager.secrets))
-    else:
-        pp.pprint(secrets_manager.secrets)
-
-
-if __name__ == "__main__":
-    decrypt_secret()
+        return secrets_dict
