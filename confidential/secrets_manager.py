@@ -22,10 +22,7 @@ class SecretsManager:
         secrets_manager_decrypter = SecretsManagerDecrypter(session=session, region_name=region_name)
         parameter_store_decrypter = ParameterStoreDecrypter(session=session, region_name=region_name)
 
-        self.decrypters = [
-            secrets_manager_decrypter,
-            parameter_store_decrypter
-        ]
+        self.decrypters = [secrets_manager_decrypter, parameter_store_decrypter]
 
         secrets_defaults = self.parse_secrets_file(secrets_file_default) if secrets_file_default else {}
         secrets = self.parse_secrets_file(secrets_file) if secrets_file else {}
@@ -81,10 +78,10 @@ class SecretsManager:
         return result
 
     def find_supported_decrypter(self, value):
-        if (isinstance(value, str)):
+        if isinstance(value, str):
             supported = list(filter(lambda decrypter: value.startswith(decrypter.SECRET_PREFIX), self.decrypters))
             return next(iter(supported), None)
-        else: 
+        else:
             return None
 
     def parse_secrets_file(self, path_to_file) -> dict:

@@ -1,12 +1,13 @@
 from botocore.exceptions import ClientError
 from confidential.exceptions import PermissionError
 
+
 class ParameterStoreDecrypter:
     def __init__(self, session=None, region_name=None):
         self.SERVICE_NAME = "ssm"
         self.SECRET_PREFIX = "ssm:"
         self.client = session.client(service_name=self.SERVICE_NAME, region_name=region_name)
-    
+
     def decrypt_secret_from_aws(self, secret) -> str:
         """
         Decrypts a secret from AWS Parameter Store.
@@ -30,7 +31,7 @@ class ParameterStoreDecrypter:
 
             elif e.response["Error"]["Code"] == "InvalidKeyId":
                 raise Exception("We can't find the resource that you asked for.") from e
-            
+
             elif e.response["Error"]["Code"] == "UnrecognizedClientException":
                 raise Exception("The security token included in the request is invalid.") from e
 
@@ -38,7 +39,5 @@ class ParameterStoreDecrypter:
                 raise e
         else:
             if "Parameter" not in get_secret_value_response or get_secret_value_response["Parameter"]["Value"] is None:
-                raise PermissionError(
-                    "`Value` not found in AWS response, does the IAM user have correct permissions?"
-                )
+                raise PermissionError("`Value` not found in AWS response, does the IAM user have correct permissions?")
             return get_secret_value_response["Parameter"]["Value"]

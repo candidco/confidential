@@ -1,12 +1,13 @@
 from botocore.exceptions import ClientError
 from confidential.exceptions import PermissionError
 
+
 class SecretsManagerDecrypter:
     def __init__(self, session=None, region_name=None):
         self.SERVICE_NAME = "secretsmanager"
         self.SECRET_PREFIX = "secret:"
         self.client = session.client(service_name=self.SERVICE_NAME, region_name=region_name)
-    
+
     def decrypt_secret_from_aws(self, secret) -> str:
         """
         Decrypts a secret from AWS Secret Manager
