@@ -4,28 +4,31 @@ on: [push]
 
 jobs:
   test:
-
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os-python-version.os }}
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.6, 3.7]
+        os-python-version:
+          [
+            { "os": "ubuntu-18.04", "python": 3.6 },
+            { "os": "ubuntu-latest", "python": 3.7 },
+          ]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        pip install poetry>=0.12
-        poetry config virtualenvs.create false --local
-        poetry install
-    - name: Test with pytest
-      run: |
-        pytest
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.os-python-version.python }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.os-python-version.python }}
+      - name: Install dependencies
+        run: |
+          pip install poetry>=0.12
+          poetry config virtualenvs.create false --local
+          poetry install
+      - name: Test with pytest
+        run: |
+          pytest
 
   build_and_deploy:
     needs: test
@@ -34,7 +37,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
