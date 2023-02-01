@@ -20,10 +20,12 @@ class ConfigsManager:
         secrets_manager = SecretsManager(secrets=secrets, secrets_defaults=secrets_defaults, region_name=region_name, session=session)
         decrypted_secrets = secrets_manager.secrets
 
-        parameter_store = ParameterStore(secrets=decrypted_secrets, region_name=region_name, session=session)
-        decrypted_parameters = parameter_store.secrets
+        self.secrets = decrypted_secrets
 
-        self.secrets = merge(decrypted_secrets, decrypted_parameters)
+        # parameter_store = ParameterStore(secrets_file=secrets_file, secrets_file_default=secrets_file_default, region_name=region_name, session=session)
+        # decrypted_parameters = parameter_store.secrets
+
+        # self.secrets = merge(decrypted_secrets, decrypted_parameters)
 
     @staticmethod
     def import_secrets_file(path_to_file) -> dict:

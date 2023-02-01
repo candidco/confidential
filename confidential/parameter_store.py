@@ -10,12 +10,12 @@ log = logging.getLogger(__name__)
 
 
 class ParameterStore:
-    def __init__(self, secrets=None, secrets_defaults=None, region_name=None, session=None):
+    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, session=None):
         self.session = session
         self.client = session.client(service_name="ssm", region_name=region_name)
 
-        secrets_defaults = self.parse_secrets(secrets_defaults) if secrets_defaults else {}
-        secrets = self.parse_secrets(secrets) if secrets else {}
+        secrets_defaults = self.parse_secrets_file(secrets_file_default) if secrets_file_default else {}
+        secrets = self.parse_secrets_file(secrets_file) if secrets_file else {}
 
         self.secrets = merge(secrets_defaults, secrets)
 
@@ -63,6 +63,17 @@ class ParameterStore:
                 )
             return get_secret_value_response["Parameter"]["Value"]
 
+    @staticmethod
+    def import_secrets_file(path_to_file) -> dict:
+        """
+        Imports a JSON file and returns a Python dictionary
+        """
+        if not os.path.exists(path_to_file):
+            raise Exception(f"Specified file '{path_to_file}' does not exist")
+
+        with open(path_to_file) as file_object:
+            return json.load(file_object)
+
     def traverse_and_decrypt(self, config):
         """
         Recursively walks the dictionary of values, and decrypts values if necessary
@@ -90,11 +101,13 @@ class ParameterStore:
             result = decrypted_string
         return result
 
-    def parse_secrets(self, secrets) -> dict:
+    def parse_secrets_file(self, path_to_file) -> dict:
         """
-        Parses a JSON dictionary and returns a decrypted JSON dictionary
+        Imports and parses a JSON file and returns a decrypted JSON dictionary
         """
-        secrets_dict = secrets
-        self.traverse_and_decrypt(secrets_dict)
+        config = self.import_secrets_file(path_to_file)
 
-        return secrets_dict
+        self.traverse_and_decrypt(config)
+
+        return config
+
