@@ -106,6 +106,3 @@ venv.bak/
 # IntelliJ
 .idea/workspace.xml
 .idea/tasks.xml
-
-#VSCode
-.vscode/

@@ -1,6 +1,9 @@
+import boto3
+import click
 import json
 import logging
 import os
+import pprint
 from botocore.exceptions import ClientError
 
 from confidential.exceptions import PermissionError
@@ -10,7 +13,9 @@ log = logging.getLogger(__name__)
 
 
 class ParameterStore:
-    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, session=None):
+    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, profile_name=None):
+        session = boto3.session.Session(profile_name=profile_name)
+
         self.session = session
         self.client = session.client(service_name="ssm", region_name=region_name)
 
@@ -111,3 +116,20 @@ class ParameterStore:
 
         return config
 
+
+def decrypt_secret(secrets_file, default_secrets_file, profile, aws_region, output_json):
+    pp = pprint.PrettyPrinter(indent=4)
+    secrets_manager = SecretsManager(
+        secrets_file=secrets_file,
+        secrets_file_default=default_secrets_file,
+        region_name=aws_region,
+        profile_name=profile,
+    )
+    if output_json is True:
+        print(json.dumps(secrets_manager.secrets))
+    else:
+        pp.pprint(secrets_manager.secrets)
+
+
+if __name__ == "__main__":
+    decrypt_secret()
