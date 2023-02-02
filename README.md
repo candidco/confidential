@@ -10,7 +10,7 @@ pip install confidential
 
 ## How does it work?
 
-Confidential manages secrets for your project, using AWS Secrets Manager.
+Confidential manages secrets for your project, using AWS Secrets Manager and SSM Parameter Store.
 
 First, store a secret in AWS Secrets Manager. Then, create a secrets file, say `my_secrets.json`. A value will be decrypted if the word `secret` precedes it, like the `database` value below:
 
@@ -20,7 +20,9 @@ First, store a secret in AWS Secrets Manager. Then, create a secrets file, say `
   "environment": "production",
   "debug_mode": false
 }
-```  
+```
+
+Similarly, SSM Parameters can be referenced by providing a parameter key, e.g.: `"ssm:some_ssm_parameter_key"`.
  
 You can decrypt this file either in Python, or directly using the CLI. Ensure [AWS CLI](https://aws.amazon.com/cli/) is set up, then run:
 

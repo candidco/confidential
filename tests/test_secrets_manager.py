@@ -20,6 +20,11 @@ def test_happy_path(secrets_file):
     # Check nested object decoding
     assert secrets["nested_object"] == {"foo": "bar"}
 
+    # Check SSM parameter decoding
+    assert secrets["parameter_key"] == "ssm_parameter_value"
+    assert secrets["nested_object_parameter"] == {"ping": "pong"}
+    assert secrets["nested_parameter_key"] == {"temp_c": 3, "snow_fall_cm": 20, "some_parameter": "cold" }
+
 
 @pytest.mark.parametrize("secret_value_response", [{"FakeKey": "FakeValue"}, {"SecretString": None}])
 def test_missing_secret_string_raises_permission_error(secret_value_response, mocker, secrets_file):
