@@ -67,6 +67,25 @@ DATABASES = {
 }
 ```
 
+If `export_env_variables` is set to `True`, each secret will also be exported as an environment variable, with the uppercase key as the variable name, e.g.:
+
+```python
+from confidential import SecretsManager
+import os
+
+secrets = SecretManager(
+    secrets_file=".secrets/production.json",
+    secrets_file_default=".secrets/defaults.json",  # Overridable defaults you can use in common environments
+    region_name="us-east-1",
+    export_env_variables=True,  # Optionally, export secrets as environment variables. Default is False.
+)
+
+# If the key of a secret is `api_key`, then the following is true:
+assert secrets["api_key"] == os.environ.get("API_KEY")
+```
+
+Trying to access an inexisting key returns `None`. On previous versions, it would throw an exception.
+
 # Testing
 
 First, install all dependencies:
