@@ -4,18 +4,16 @@ import json
 import logging
 import os
 import pprint
-from botocore.exceptions import ClientError
 
 from confidential.secrets_manager_decrypter import SecretsManagerDecrypter
 from confidential.parameter_store_decrypter import ParameterStoreDecrypter
-from confidential.exceptions import PermissionError
 from confidential.utils import merge
 
 log = logging.getLogger(__name__)
 
 
 class SecretsManager:
-    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, profile_name=None):
+    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, profile_name=None, export_env_variables=False):
         session = boto3.session.Session(profile_name=profile_name)
 
         self.session = session
@@ -29,13 +27,16 @@ class SecretsManager:
 
         self.secrets = merge(secrets_defaults, secrets)
 
+        if export_env_variables:
+            self.export_env_variables(self.secrets)
+
     def __getitem__(self, key):
         """
         Allows us to do <SecretsManager>["foo"] instead of <SecretsManager>.secrets.get("foo")
         """
         value = self.secrets.get(key)
         if value is None:
-            raise Exception(f"Value for '{key}' was not found in the secrets file", self.secrets)
+            log.warning(f"Value for '{key}' was not found in the secrets file. Returning 'None'.")
         return value
 
     @staticmethod
@@ -93,6 +94,11 @@ class SecretsManager:
         self.traverse_and_decrypt(config)
 
         return config
+
+    def export_env_variables(self, secrets):
+        for key in secrets:
+            uppercase_key = key.upper()
+            os.environ[uppercase_key] = str(secrets[key])
 
 
 @click.command()
