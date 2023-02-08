@@ -36,7 +36,7 @@ class SecretsManager:
         """
         value = self.secrets.get(key)
         if value is None:
-            log.warning(f"Value for '{key}' was not found in the secrets file. Returning 'None'.", self.secrets)
+            log.warning(f"Value for '{key}' was not found in the secrets file. Returning 'None'.")
         return value
 
     @staticmethod
