@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 
 class SecretsManager:
-    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, profile_name=None):
+    def __init__(self, secrets_file=None, secrets_file_default=None, region_name=None, profile_name=None, export_env_variables=False):
         session = boto3.session.Session(profile_name=profile_name)
 
         self.session = session
@@ -28,6 +28,9 @@ class SecretsManager:
         secrets = self.parse_secrets_file(secrets_file) if secrets_file else {}
 
         self.secrets = merge(secrets_defaults, secrets)
+
+        if export_env_variables:
+            self.export_env_variables(self.secrets)
 
     def __getitem__(self, key):
         """
@@ -93,6 +96,11 @@ class SecretsManager:
         self.traverse_and_decrypt(config)
 
         return config
+
+    def export_env_variables(self, secrets):
+        for key in secrets:
+            uppercase_key = key.upper()
+            os.environ[uppercase_key] = str(secrets[key])
 
 
 @click.command()
