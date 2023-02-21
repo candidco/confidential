@@ -93,3 +93,33 @@ def secrets_file(secrets):
         tf.close()
 
     return wrapped
+
+@pytest.fixture
+def ssm_params(store_parameter):
+    store_parameter("parameter_key", "ssm_parameter_value")
+    store_parameter("nested_object_parameter", '{"ping": "pong"}')
+    store_parameter("nested_parameter_key", "cold")
+
+    def wrapped(**overrides):
+        d = {
+            "foo": "bar",
+            "parameter_key": "ssm:parameter_key",
+            "nested_object_parameter": "ssm:nested_object_parameter",
+            "nested_parameter_key": {"temp_c": 3, "snow_fall_cm": 20, "some_parameter": "ssm:nested_parameter_key"},
+        }
+        d.update(overrides)
+        return d
+
+    return wrapped
+
+@pytest.fixture
+def ssm_params_file(ssm_params):
+    @contextmanager
+    def wrapped(**overrides):
+        tf = tempfile.NamedTemporaryFile()
+        tf.write(json.dumps(ssm_params(**overrides)).encode("utf8"))
+        tf.seek(0)
+        yield tf.name
+        tf.close()
+
+    return wrapped

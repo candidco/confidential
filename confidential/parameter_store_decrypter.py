@@ -1,5 +1,5 @@
 from botocore.exceptions import ClientError
-from confidential.exceptions import PermissionError
+from confidential.exceptions import DecryptFromAWSError
 
 
 class ParameterStoreDecrypter:
@@ -10,34 +10,25 @@ class ParameterStoreDecrypter:
 
     def decrypt_secret_from_aws(self, secret) -> str:
         """
-        Decrypts a secret from AWS Parameter Store.
+        Decrypts a parameter from AWS Parameter Store.
         """
-        secret_id = secret[len(self.SECRET_PREFIX):]
+        name = secret[len(self.SECRET_PREFIX) :]
         try:
-            get_secret_value_response = self.client.get_parameter(Name=secret_id, WithDecryption=True)
-
+            get_parameter_response = self.client.get_parameter(Name=name, WithDecryption=True)
         except ClientError as e:
-            if e.response["Error"]["Code"] == "DecryptionFailureException":
-                raise Exception("can't decrypt the protected secret text using the provided KMS key.") from e
-
-            elif e.response["Error"]["Code"] == "InternalServerError":
-                raise Exception("An error occurred on the server side.") from e
-
-            elif e.response["Error"]["Code"] == "ParameterNotFound":
-                raise Exception("You provided an invalid value for a parameter.") from e
-
-            elif e.response["Error"]["Code"] == "ParameterVersionNotFound":
-                raise Exception("Invalid parameter value for the current state of the resource.") from e
-
-            elif e.response["Error"]["Code"] == "InvalidKeyId":
-                raise Exception("We can't find the resource that you asked for.") from e
-
-            elif e.response["Error"]["Code"] == "UnrecognizedClientException":
-                raise Exception("The security token included in the request is invalid.") from e
-
-            else:
-                raise e
+            raise DecryptFromAWSError(
+                f"Error decrypting Name={name}. {e.response['Error']['Code']}: {e.response['Error']['Message']}"
+            )
         else:
-            if "Parameter" not in get_secret_value_response or get_secret_value_response["Parameter"]["Value"] is None:
-                raise PermissionError("`Value` not found in AWS response, does the IAM user have correct permissions?")
-            return get_secret_value_response["Parameter"]["Value"]
+            try:
+                parameter_value = get_parameter_response["Parameter"]["Value"]
+                if parameter_value is None:
+                    raise DecryptFromAWSError(
+                        f"Error decrypting Name={name}. `Parameter.Value` was `None`. Does the IAM user have correct permissions?"
+                    )
+            except KeyError as e:
+                raise DecryptFromAWSError(
+                    f"Error decrypting Name={name}. `Parameter.Value` not found in AWS response. Does the IAM user have correct permissions?"
+                )
+            else:
+                return parameter_value

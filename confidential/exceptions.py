@@ -1,2 +1,2 @@
-class PermissionError(Exception):
+class DecryptFromAWSError(Exception):
     pass

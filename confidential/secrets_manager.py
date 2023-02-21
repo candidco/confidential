@@ -7,6 +7,7 @@ import pprint
 
 from confidential.secrets_manager_decrypter import SecretsManagerDecrypter
 from confidential.parameter_store_decrypter import ParameterStoreDecrypter
+from confidential.exceptions import DecryptFromAWSError
 from confidential.utils import merge
 
 log = logging.getLogger(__name__)
