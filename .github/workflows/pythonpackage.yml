@@ -46,6 +46,26 @@ jobs:
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
+      - name: Install pypa/build
+        run: |
+          python -m
+          pip install
+          build
+          --user
+
+      - name: Build a binary wheel and a source tarball
+        run: |
+          python -m
+          build
+          --sdist
+          --wheel
+          --outdir dist/
+
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
       - name: Push to s3
         env:
           AWS_S3_BUCKET: pypi.candidco.com
@@ -55,3 +75,4 @@ jobs:
           pip install poetry2setup
           poetry2setup > setup.py
           s3pypi --bucket pypi.candidco.com --private || echo "ERROR: push failed for $package";
+
