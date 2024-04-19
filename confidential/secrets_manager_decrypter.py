@@ -1,5 +1,5 @@
 from botocore.exceptions import ClientError
-from confidential.exceptions import DecryptFromAWSError
+from .exceptions import DecryptFromAWSError
 
 
 class SecretsManagerDecrypter:

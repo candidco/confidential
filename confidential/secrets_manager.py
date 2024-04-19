@@ -5,10 +5,10 @@ import logging
 import os
 import pprint
 
-from confidential.secrets_manager_decrypter import SecretsManagerDecrypter
-from confidential.parameter_store_decrypter import ParameterStoreDecrypter
-from confidential.exceptions import DecryptFromAWSError
-from confidential.utils import merge
+from .secrets_manager_decrypter import SecretsManagerDecrypter
+from .parameter_store_decrypter import ParameterStoreDecrypter
+from .exceptions import DecryptFromAWSError
+from .utils import merge
 
 log = logging.getLogger(__name__)
 
