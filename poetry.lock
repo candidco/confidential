@@ -765,4 +765,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=4.6)", "pytest-black (
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "47a544019e725a2dcd2aa5331eb4f36eb5a61efe5c3fd40531493ce66aca196a"
+content-hash = "f7c3d0b9a068cf8d6be13e077d6d522b2edebd95a71643da6b73e466136d5b1c"
