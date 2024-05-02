@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "confidential"
-version = "2.6.0"
+version = "2.6.1"
 description = "Manage secrets in your projects using AWS Secrets Manager"
 authors = [
     "Daniel van Flymen <dvf@candidco.com>",
@@ -12,13 +12,13 @@ authors = [
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.6"
+python = ">=3.7,<3.12"
 boto3 = "^1.7"
-click = "8.0.3"
+click = "8.1.7"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^18.3-alpha.0", allow-prereleases = true}
-pytest = "^3.0"
+pytest = "6.2.5"
 pytest-mock = "^1.10"
 moto = "^3.1.18"
 PyYAML = "^6.0"

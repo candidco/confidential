@@ -10,8 +10,11 @@ jobs:
       matrix:
         os-python-version:
           [
-            { "os": "ubuntu-18.04", "python": 3.6 },
-            { "os": "ubuntu-latest", "python": 3.7 },
+            { "os": "ubuntu-latest", "python": "3.7" },
+            { "os": "ubuntu-latest", "python": "3.8" },
+            { "os": "ubuntu-latest", "python": "3.9" },
+            { "os": "ubuntu-latest", "python": "3.10" },
+            { "os": "ubuntu-latest", "python": "3.11" },
           ]
 
     steps:
@@ -68,4 +71,3 @@ jobs:
           pip install poetry2setup
           poetry2setup > setup.py
           s3pypi --bucket pypi.candidco.com --private || echo "ERROR: push failed for $package";
-
