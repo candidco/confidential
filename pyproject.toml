@@ -12,7 +12,7 @@ authors = [
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.7,<3.12"
 boto3 = "^1.7"
 click = "8.1.7"
 
