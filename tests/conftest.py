@@ -8,7 +8,7 @@ from moto import mock_secretsmanager
 from moto import mock_ssm
 
 
-@pytest.yield_fixture(autouse=True)
+@pytest.fixture(autouse=True)
 def mock_secrets_manager():
     """
     Starts secretsmanager mock at the beginning of tests, and closes it at the end of the session
@@ -19,7 +19,7 @@ def mock_secrets_manager():
     mock.stop()
 
 
-@pytest.yield_fixture(autouse=True)
+@pytest.fixture(autouse=True)
 def mock_parameter_store():
     """
     Starts ssm mock at the beginning of tests, and closes it at the end of the session
@@ -51,7 +51,7 @@ def store_parameter():
 
     def wrapped(key, value):
         ps = boto3.client("ssm", region_name="us-west-1")
-        ps.put_parameter(Name=key, Value=value)
+        ps.put_parameter(Name=key, Value=value, Type='String')
 
     return wrapped
 
